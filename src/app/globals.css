@@ -109,6 +109,7 @@
   --ring-offset: var(--background);
 }
 
+/* stylelint-disable-next-line at-rule-no-unknown */
 @theme inline {
   /* ========== BASE SURFACES ========== */
   --color-background: var(--background);
