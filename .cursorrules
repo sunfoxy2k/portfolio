@@ -1,0 +1,44 @@
+# CSS Theme Variables Rule
+
+## Use Theme Inline Variables Instead of CSS Variables
+
+When using Tailwind CSS classes with theme colors, always use theme inline variables with opacity modifiers instead of CSS variable syntax.
+
+### ❌ BAD - Don't use this pattern:
+```tsx
+className="bg-[var(--background)]/80"
+className="border-[var(--border)]/50"
+className="text-[var(--foreground)]"
+className="hover:bg-[var(--hover)]/50"
+```
+
+### ✅ GOOD - Use theme inline variables:
+```tsx
+className="bg-background/80"
+className="border-border/50"
+className="text-foreground"
+className="hover:bg-hover/50"
+```
+
+### Available Theme Variables:
+- `background` / `bg-background`
+- `foreground` / `text-foreground`
+- `muted` / `bg-muted`
+- `muted-foreground` / `text-muted-foreground`
+- `border` / `border-border`
+- `accent` / `bg-accent`
+- `accent-foreground` / `text-accent-foreground`
+- `card` / `bg-card`
+- `card-foreground` / `text-card-foreground`
+- `hover` / `bg-hover`
+- `input` / `bg-input`
+- `input-border` / `border-input-border`
+- `input-focus` / `border-input-focus`
+
+### Opacity Modifiers:
+All theme colors support Tailwind's opacity modifiers (e.g., `/50`, `/80`, `/30`):
+- `bg-background/80` - 80% opacity
+- `border-border/50` - 50% opacity
+- `bg-hover/50` - 50% opacity
+
+This ensures consistency with Tailwind CSS v4's theme system and proper theme-aware styling.
