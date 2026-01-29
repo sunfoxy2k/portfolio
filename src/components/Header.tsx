@@ -5,8 +5,6 @@ import { useTheme } from 'next-themes';
 import Link from 'next/link';
 import { Sun, Moon, Home, Grid3x3, Bookmark, Image as ImageIcon, Download, User } from 'lucide-react';
 
-
-
 const TimeDisplay = () => {
   const [time, setTime] = useState('');
 
@@ -30,7 +28,6 @@ const TimeDisplay = () => {
   }, []);
 
   return (
-
     <div className="flex items-center">
       <span className="text-xs md:text-sm font-mono transition-colors text-foreground">
         <span className="hidden sm:inline">GMT+7 </span>
@@ -44,10 +41,33 @@ const TimeDisplay = () => {
 const LocationDisplay = () => {
   return (
     <div className="hidden md:flex items-center">
-    <span className="text-xs md:text-sm transition-colors text-foreground">
-      Vietnam/Saigon
-    </span>
-  </div>
+      <span className="text-xs md:text-sm transition-colors text-foreground">
+        Vietnam/Saigon
+      </span>
+    </div>
+  )
+}
+
+
+const NavigationLinkItem = (item: {
+  name: string | null,
+  icon: React.ComponentType<React.SVGProps<SVGSVGElement>>,
+  href: string,
+  ariaKey: string,
+}) => {
+  const isActive = item.name === 'About';
+  const Icon = item.icon;
+
+  const activeClass = `${isActive
+    ? 'bg-hover text-foreground hover:bg-hover/80'
+    : 'text-foreground hover:bg-hover/50'
+    }`;
+
+  return (
+    <Link href={item.href} className={`flex items-center gap-1 md:gap-1.5 px-2 md:px-3 py-1 md:py-1.5 rounded-full transition-all ${activeClass}`} aria-label={item.ariaKey}>
+      <Icon className="w-3 h-3 md:w-3.5 md:h-3.5" />
+      <span className="hidden lg:inline text-xs md:text-sm">{item.name}</span>
+    </Link>
   )
 }
 
@@ -56,74 +76,55 @@ const NaviagationMenu = () => {
   const toggleTheme = () => setTheme(theme === 'dark' ? 'light' : 'dark');
 
   const navItems = [
-    { name: 'About', icon: User, href: '#about' },
-    { name: 'Work', icon: Grid3x3, href: '#work' },
-    { name: 'Blog', icon: Bookmark, href: '#blog' },
-    { name: 'Gallery', icon: ImageIcon, href: '#gallery' },
+    // { name: null, icon: Home, href: '#home', ariaKey: 'home'},
+    { name: 'About', icon: User, href: '#about', ariaKey: 'about' },
+    { name: 'Work', icon: Grid3x3, href: '#work', ariaKey: 'work' },
+    { name: 'Blog', icon: Bookmark, href: '#blog', ariaKey: 'blog', isButton: true },
   ];
 
-
   return (
-    <div className="absolute left-1/2 transform -translate-x-1/2 flex items-center gap-0 bg-muted/80 backdrop-blur-sm rounded-full px-1 md:px-2 py-1 md:py-1.5 border border-border/30">
-          <Link
-            href="#"
-            className="p-1.5 md:p-2 rounded-full transition-colors hover:bg-hover/50 cursor-pointer"
-            aria-label="Home"
-          >
-            <Home className="w-3.5 h-3.5 md:w-4 md:h-4 text-foreground" />
-          </Link>
+    <div className="absolute left-1/2 transform -translate-x-1/2 flex items-center bg-muted/80 backdrop-blur-sm rounded-full px-1 md:px-2 py-1 md:py-1.5 border border-border/30">
 
-          <div className="w-px h-3 md:h-4 bg-border/50 mx-0.5 md:mx-1" />
+      <Link className="p-1.5 md:p-2 rounded-full transition-colors hover:bg-hover/50 "
+        href="/"
+        aria-label="Home"
+      >
+        <Home className="w-3.5 h-3.5 md:w-4 md:h-4 text-foreground" />
+      </Link>
 
-          {navItems.map((item, index) => {
-            const Icon = item.icon;
-            const isActive = item.name === 'About';
-            return (
-              <div key={item.name} className="flex items-center">
-                <Link
-                  href={item.href}
-                  className={`flex items-center gap-1 md:gap-1.5 px-2 md:px-3 py-1 md:py-1.5 rounded-full transition-all cursor-pointer ${isActive
-                    ? 'bg-hover text-foreground hover:bg-hover/80'
-                    : 'text-foreground hover:bg-hover/50'
-                    }`}
-                  title={item.name}
-                >
-                  {Icon && <Icon className="w-3 h-3 md:w-3.5 md:h-3.5" />}
-                  <span className="hidden lg:inline text-xs md:text-sm">{item.name}</span>
-                </Link>
-                {index < navItems.length - 1 && (
-                  <div className="w-px h-3 md:h-4 bg-border/50 mx-0.5 md:mx-1" />
-                )}
-              </div>
-            );
-          })}
+      <div className="w-px h-3 md:h-4 bg-muted-foreground/40 mr-1 md:mr-2 rounded-full" />
 
-          <div className="w-px h-3 md:h-4 bg-border/50 mx-0.5 md:mx-1" />
-
-          <button
-            className="p-1.5 md:p-2 rounded-full transition-colors hover:bg-hover/50 cursor-pointer"
-            aria-label="Download"
-          >
-            <Download className="w-3.5 h-3.5 md:w-4 md:h-4 text-foreground" />
-          </button>
-
-          <div className="w-px h-3 md:h-4 bg-border/50 mx-0.5 md:mx-1" />
-
-          <button
-            onClick={toggleTheme}
-            className="p-1.5 md:p-2 rounded-full transition-colors hover:bg-hover/50 cursor-pointer"
-            aria-label="Toggle theme"
-          >
-            {theme === 'dark' ? (
-              <Sun className="w-3.5 h-3.5 md:w-4 md:h-4 text-foreground" />
-            ) : (
-              <Moon className="w-3.5 h-3.5 md:w-4 md:h-4 text-foreground" />
-            )}
-          </button>
+      {navItems.map((item) => (
+        <div key={item.ariaKey} className="flex items-center">
+          <NavigationLinkItem {...item} />
         </div>
+      ))}
 
+      <div className="w-px h-3 md:h-4 bg-muted-foreground/40 mx-0.5 md:mx-1 rounded-full" />
+
+      <button
+        className="p-1.5 md:p-2 rounded-full transition-colors hover:bg-hover/50 "
+        aria-label="Download"
+      >
+        <Download className="w-3.5 h-3.5 md:w-4 md:h-4 text-foreground" />
+      </button>
+
+      <button
+        onClick={toggleTheme}
+        className="p-1.5 md:p-2 rounded-full transition-colors hover:bg-hover/50 "
+        aria-label="Toggle theme"
+      >
+        {theme === 'dark' ? (
+          <Sun className="w-3.5 h-3.5 md:w-4 md:h-4 text-foreground" />
+        ) : (
+          <Moon className="w-3.5 h-3.5 md:w-4 md:h-4 text-foreground" />
+        )}
+      </button>
+    </div>
   )
 }
+
+
 
 export default function Header() {
 
@@ -138,8 +139,6 @@ export default function Header() {
         <TimeDisplay />
       </header>
 
-      {/* Blue separator line */}
-      {/* <div className="fixed top-[80px] left-0 w-full h-px bg-blue-500 z-header-separator pointer-events-none" /> */}
     </>
   );
 }
