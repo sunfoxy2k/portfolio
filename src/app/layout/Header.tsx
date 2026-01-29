@@ -3,7 +3,9 @@
 import { useState, useEffect } from 'react';
 import { useTheme } from 'next-themes';
 import Link from 'next/link';
-import { Sun, Moon, Home, Grid3x3, Bookmark, Image as ImageIcon, Download, User } from 'lucide-react';
+import { Sun, Moon, Home, Download } from 'lucide-react';
+
+import { navItems } from './meta';
 
 const TimeDisplay = () => {
   const [time, setTime] = useState('');
@@ -16,7 +18,7 @@ const TimeDisplay = () => {
         hour: '2-digit',
         minute: '2-digit',
         second: '2-digit',
-        hour12: true,
+        hour12: true, 
       }).format(now);
       setTime(vietnamTime);
     };
@@ -28,10 +30,9 @@ const TimeDisplay = () => {
   }, []);
 
   return (
-    <div className="flex items-center">
+    <div className="hidden sm:flex items-center  ">
       <span className="text-xs md:text-sm font-mono transition-colors text-foreground">
-        <span className="hidden sm:inline">GMT+7 </span>
-        {time}
+        <span >GMT+7 </span>{time}
       </span>
     </div>
 
@@ -71,19 +72,14 @@ const NavigationLinkItem = (item: {
   )
 }
 
+
+
 const NaviagationMenu = () => {
   const { theme, setTheme } = useTheme();
   const toggleTheme = () => setTheme(theme === 'dark' ? 'light' : 'dark');
 
-  const navItems = [
-    // { name: null, icon: Home, href: '#home', ariaKey: 'home'},
-    { name: 'About', icon: User, href: '#about', ariaKey: 'about' },
-    { name: 'Work', icon: Grid3x3, href: '#work', ariaKey: 'work' },
-    { name: 'Blog', icon: Bookmark, href: '#blog', ariaKey: 'blog', isButton: true },
-  ];
-
   return (
-    <div className="absolute left-1/2 transform -translate-x-1/2 flex items-center bg-muted/80 backdrop-blur-sm rounded-full px-1 md:px-2 py-1 md:py-1.5 border border-border/30">
+    <div className="hidden md:flex absolute left-1/2 transform -translate-x-1/2 items-center bg-muted/80 backdrop-blur-sm rounded-full px-1 md:px-2 py-1 md:py-1.5 border border-border/30">
 
       <Link className="p-1.5 md:p-2 rounded-full transition-colors hover:bg-hover/50 "
         href="/"
@@ -127,18 +123,13 @@ const NaviagationMenu = () => {
 
 
 export default function Header() {
-
   return (
     <>
-      {/* Fade mask effect */}
-      <div className="fixed top-0 left-0 w-full h-16 md:h-20 z-header-mask pointer-events-none fade-mask" />
-
-      <header className="fixed top-0 left-0 w-full z-header flex items-center justify-between px-4 md:px-6 lg:px-8 py-3 md:py-4 min-h-[64px] md:min-h-[80px] transition-all backdrop-blur-xl bg-background/80">
+      <header className="hidden md:flex fixed top-0 left-0 w-full z-header items-center justify-between px-4 md:px-6 lg:px-8 py-3 md:py-4 min-h-[64px] md:min-h-[80px] transition-all backdrop-blur-xl bg-background/80">
         <LocationDisplay />
         <NaviagationMenu />
         <TimeDisplay />
       </header>
-
     </>
   );
 }
