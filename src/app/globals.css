@@ -61,6 +61,9 @@
   /* Ring / focus */
   --ring: hsl(0, 0%, 63%);
   --ring-offset: var(--background);
+
+  /* Terminal accent — classic green */
+  --terminal: hsl(142, 70%, 45%);
 }
 
 /* ========== LIGHT THEME: "The Canvas" ========== */
@@ -121,6 +124,9 @@
   /* Nav / active (current page) state */
   --active: hsla(220, 4%, 11%, 0.06);
   --active-foreground: hsl(220, 4%, 11%);
+
+  /* Terminal accent — green */
+  --terminal: hsl(142, 60%, 35%);
 }
 
 /* stylelint-disable-next-line at-rule-no-unknown */
@@ -165,6 +171,9 @@
   /* ========== ACTIVE (NAV CURRENT PAGE) ========== */
   --color-active: var(--active);
   --color-active-foreground: var(--active-foreground);
+
+  /* ========== TERMINAL ACCENT ========== */
+  --color-terminal: var(--terminal);
 
   /* ========== FEEDBACK COLORS ========== */
   --color-success: var(--success);
@@ -323,6 +332,16 @@ html:not(.dark) body::after {
 }
 
 /* No soft blur on main — sharp, data-heavy terminal feel */
+
+/* Terminal-style blinking cursor */
+@keyframes cursor-blink {
+  0%, 50% { opacity: 1; }
+  51%, 100% { opacity: 0; }
+}
+
+.cursor-blink {
+  animation: cursor-blink 1s step-end infinite;
+}
 
 /* Semantic z-index utility classes */
 .z-base {

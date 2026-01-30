@@ -12,16 +12,16 @@ export default function MobileFooterNav() {
 
     return (
         <nav
-            className="md:hidden fixed bottom-0 left-0 right-0 z-header flex items-center justify-around bg-card border-t border-border/50 pb-[env(safe-area-inset-bottom)]"
+            className="md:hidden fixed bottom-0 left-0 right-0 z-header flex items-center justify-around bg-card border-t border-border pb-[env(safe-area-inset-bottom)]"
             aria-label="Mobile navigation"
         >
             <Link
                 href="/"
-                className="flex flex-col items-center justify-center gap-0.5 py-3 px-4 min-w-0 flex-1 rounded-none transition-colors hover:bg-hover/50 active:bg-hover text-foreground"
+                className="flex flex-col items-center justify-center gap-0.5 py-2.5 px-3 min-w-0 flex-1 rounded-none transition-colors hover:bg-hover active:bg-hover text-foreground"
                 aria-label="Home"
             >
                 <Home className="w-5 h-5 shrink-0" />
-                <span className="text-[10px] font-medium">Home</span>
+                <span className="text-[10px] font-mono">Home</span>
             </Link>
             {navItems.map((item) => {
                 const Icon = item.icon;
@@ -29,27 +29,27 @@ export default function MobileFooterNav() {
                     <Link
                         key={item.ariaKey}
                         href={item.href}
-                        className={`flex flex-col items-center justify-center gap-0.5 py-3 px-4 min-w-0 flex-1 rounded-none transition-colors active:bg-hover text-foreground ${item.name === 'About' ? 'bg-hover/50' : 'hover:bg-hover/50'
+                        className={`flex flex-col items-center justify-center gap-0.5 py-2.5 px-3 min-w-0 flex-1 rounded-none transition-colors active:bg-hover text-foreground font-mono ${item.name === 'About' ? 'bg-hover' : 'hover:bg-hover'
                             }`}
                         aria-label={item.ariaKey}
                     >
                         <Icon className="w-5 h-5 shrink-0" />
-                        <span className="text-[10px] font-medium">{item.name}</span>
+                        <span className="text-[10px]">{item.name}</span>
                     </Link>
                 );
             })}
             <button
                 type="button"
-                className="flex flex-col items-center justify-center gap-0.5 py-3 px-4 min-w-0 flex-1 rounded-none transition-colors hover:bg-hover/50 active:bg-hover text-foreground"
+                className="flex flex-col items-center justify-center gap-0.5 py-2.5 px-3 min-w-0 flex-1 rounded-none transition-colors hover:bg-hover active:bg-hover text-foreground"
                 aria-label="Download"
             >
                 <Download className="w-5 h-5 shrink-0" />
-                <span className="text-[10px] font-medium">Download</span>
+                <span className="text-[10px] font-mono">Download</span>
             </button>
             <button
                 type="button"
                 onClick={toggleTheme}
-                className="flex flex-col items-center justify-center gap-0.5 py-3 px-4 min-w-0 flex-1 rounded-none transition-colors hover:bg-hover/50 active:bg-hover text-foreground"
+                className="flex flex-col items-center justify-center gap-0.5 py-2.5 px-3 min-w-0 flex-1 rounded-none transition-colors hover:bg-hover active:bg-hover text-foreground"
                 aria-label="Toggle theme"
             >
                 {theme === 'dark' ? (
@@ -57,7 +57,7 @@ export default function MobileFooterNav() {
                 ) : (
                     <Moon className="w-5 h-5 shrink-0" />
                 )}
-                <span className="text-[10px] font-medium">Theme</span>
+                <span className="text-[10px] font-mono">Theme</span>
             </button>
         </nav>
     );

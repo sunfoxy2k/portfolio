@@ -48,11 +48,6 @@ export default function ChatBot() {
     }
   }, [hasStarted]);
 
-  // Auto-scroll to bottom
-  useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-  }, [messages, displayedText]);
-
   // Cleanup interval on unmount
   useEffect(() => {
     return () => {
@@ -126,67 +121,102 @@ export default function ChatBot() {
     }
   };
 
-  return (
-    <div className="w-full">
-      <div className="h-[500px] overflow-y-auto mb-4 p-6 border rounded-2xl transition-all backdrop-blur-xl border-border/50 bg-card/60">
-        {/* Messages */}
-        {messages.map((message, index) => (
-          <div key={index} className={`mb-4 ${message.role === 'user' ? 'text-right' : 'text-left'}`}>
-            <div className={`inline-block p-4 rounded-2xl max-w-[85%] transition-all ${
-              message.role === 'user' 
-                ? 'bg-accent text-accent-foreground' 
-                : 'bg-muted/80 text-foreground border border-border/50'
-            }`}>
-              {message.content}
-            </div>
-          </div>
-        ))}
-        
-        {/* Typing animation */}
-        {isTyping && displayedText && (
-          <div className="text-left mb-4">
-            <div className="inline-block p-4 rounded-2xl max-w-[85%] bg-muted/80 text-foreground border border-border/50">
-              {displayedText}
-              <span className="inline-block w-0.5 h-4 ml-0.5 bg-foreground animate-pulse" />
-            </div>
-          </div>
-        )}
+  const handleClear = () => {
+    if (typingIntervalRef.current) {
+      clearInterval(typingIntervalRef.current);
+      typingIntervalRef.current = null;
+    }
+    setIsTyping(false);
+    setDisplayedText('');
+    setMessages([]);
+    setShowSuggestions(true);
+    setInput('');
+    setTimeout(() => typeMessage(GREETING, true), 0);
+  };
 
-        {/* Suggestion Questions - shown after greeting, before first user message */}
-        {showSuggestions && messages.length > 0 && !isTyping && (
-          <div className="mt-6 space-y-3">
-            {suggestionQuestions.map((question, index) => (
-              <button
-                key={index}
-                onClick={() => handleSuggestionClick(question)}
-                className="block w-full text-left p-4 rounded-xl border border-border/50 bg-background/50 text-muted-foreground hover:bg-hover hover:border-border-hover hover:text-foreground transition-all duration-200"
-              >
-                {question}
-              </button>
-            ))}
-          </div>
-        )}
-        
-        <div ref={messagesEndRef} />
-      </div>
-      
-      <div className="flex gap-3">
-        <input
-          type="text"
-          value={input}
-          onChange={(e) => setInput(e.target.value)}
-          onKeyDown={handleKeyDown}
-          placeholder="Ask me anything..."
-          className="flex-1 p-4 border rounded-xl transition-all backdrop-blur-sm focus:outline-none bg-input/80 text-foreground border-input-border/50 placeholder-muted-foreground focus:border-input-focus"
-          disabled={isTyping}
-        />
-        <button
-          onClick={() => sendMessage()}
-          disabled={isTyping || !input.trim()}
-          className="px-6 py-4 rounded-xl transition-all backdrop-blur-sm disabled:opacity-50 disabled:cursor-not-allowed bg-accent text-accent-foreground hover:bg-accent-hover"
-        >
-          Send
-        </button>
+  return (
+    <div className="w-full font-mono text-sm">
+      <div className="h-[500px] mb-4 flex flex-col border border-border rounded-md bg-card overflow-hidden">
+        {/* Terminal header — green accent, blinking on left, Clear button */}
+        <div className="shrink-0 flex items-center gap-2 border-b border-border bg-muted px-4 py-2.5">
+          <span className="inline-block w-2.5 h-3.5 bg-terminal cursor-blink shrink-0" aria-hidden />
+          <span className="text-terminal font-medium">Chat</span>
+          <span className="flex-1" />
+          <button
+            type="button"
+            onClick={handleClear}
+            className="px-2 py-1 text-muted-foreground hover:text-terminal hover:bg-terminal/10 focus:outline-none focus:text-terminal focus:bg-terminal/10 rounded transition-colors"
+            aria-label="Clear chat"
+          >
+            Clear
+          </button>
+          <span className="text-muted-foreground">~/portfolio</span>
+        </div>
+
+        {/* Messages — scrollable, terminal style */}
+        <div className="flex-1 min-h-0 overflow-y-auto overflow-x-hidden p-4 scroll-smooth">
+          {messages.map((message, index) => (
+            <div key={index} className="mb-3 text-left">
+              <span className="text-terminal select-none">
+                {message.role === 'user' ? '$ ' : '> '}
+              </span>
+              <span className="text-foreground wrap-break-word">{message.content}</span>
+            </div>
+          ))}
+
+          {/* Typing animation with blinking cursor */}
+          {isTyping && displayedText && (
+            <div className="mb-3 text-left">
+              <span className="text-terminal select-none">{'> '}</span>
+              <span className="text-foreground">{displayedText}</span>
+              <span className="inline-block w-2.5 h-4 ml-0.5 bg-terminal cursor-blink align-middle" />
+            </div>
+          )}
+
+          {/* Suggestion commands — terminal style */}
+          {showSuggestions && messages.length > 0 && !isTyping && (
+            <div className="mt-4 space-y-1.5">
+              {suggestionQuestions.map((question, index) => (
+                <button
+                  key={index}
+                  onClick={() => handleSuggestionClick(question)}
+                  className="block w-full text-left py-1.5 px-0 text-muted-foreground hover:text-terminal hover:bg-terminal/10 focus:outline-none focus:text-terminal focus:bg-terminal/10 rounded transition-colors"
+                >
+                  <span className="text-terminal select-none">$ </span>
+                  {question}
+                </button>
+              ))}
+            </div>
+          )}
+
+          <div ref={messagesEndRef} />
+        </div>
+
+        {/* Terminal prompt line — blinking left, $ green, input, Send (green hover), blinking cursor */}
+        <div className="shrink-0 flex items-center gap-2 border-t border-border bg-card px-4 py-2.5">
+          <span className="inline-block w-2.5 h-4 bg-terminal cursor-blink shrink-0" aria-hidden />
+          <span className="text-terminal select-none">$</span>
+          <input
+            type="text"
+            value={input}
+            onChange={(e) => setInput(e.target.value)}
+            onKeyDown={handleKeyDown}
+            placeholder=""
+            className="flex-1 min-w-0 bg-transparent text-foreground focus:outline-none focus:ring-0 placeholder-muted-foreground"
+            disabled={isTyping}
+            aria-label="Terminal input"
+          />
+          <button
+            type="button"
+            onClick={() => sendMessage()}
+            disabled={isTyping || !input.trim()}
+            className="shrink-0 px-3 py-1.5 text-foreground hover:text-terminal hover:bg-terminal/10 focus:outline-none focus:text-terminal focus:bg-terminal/10 disabled:opacity-50 disabled:cursor-not-allowed rounded transition-colors"
+            aria-label="Send"
+          >
+            Send
+          </button>
+          <span className="inline-block w-2.5 h-4 bg-terminal cursor-blink shrink-0" aria-hidden />
+        </div>
       </div>
     </div>
   );
