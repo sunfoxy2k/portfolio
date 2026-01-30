@@ -1,46 +1,122 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 
 interface Message {
   role: 'user' | 'assistant';
   content: string;
+  isTyping?: boolean;
 }
+
+// Static responses for the chatbot
+const staticResponses: Record<string, string> = {
+  "What are your main skills?": 
+    "I specialize in Next.js, React, and TypeScript for building performant web applications. On the backend, I work with Node.js, PostgreSQL, and have experience with both REST and GraphQL APIs. I'm also proficient in cloud infrastructure (AWS, Vercel) and CI/CD pipelines.",
+  
+  "Tell me about your experience": 
+    "I have 5+ years of experience building production applications. I've led frontend architecture decisions, mentored junior developers, and delivered projects from concept to deployment. My recent work focuses on server components, edge computing, and optimizing Core Web Vitals.",
+  
+  "What projects have you worked on?": 
+    "I've built e-commerce platforms handling thousands of daily transactions, real-time collaboration tools, and developer tooling. I'm passionate about DX and have contributed to open-source projects in the React ecosystem.",
+};
+
+const suggestionQuestions = [
+  "What are your main skills?",
+  "Tell me about your experience",
+  "What projects have you worked on?",
+];
+
+const GREETING = "Hi! I'm a senior full stack developer passionate about building performant, scalable web applications with modern technologies. Feel free to ask me anything!";
+
+const FALLBACK_RESPONSE = "That's a great question! Feel free to ask about my skills, experience, or projects using the suggestions above, or type your own question.";
 
 export default function ChatBot() {
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
+  const [isTyping, setIsTyping] = useState(false);
+  const [displayedText, setDisplayedText] = useState('');
+  const [showSuggestions, setShowSuggestions] = useState(true);
+  const [hasStarted, setHasStarted] = useState(false);
+  const messagesEndRef = useRef<HTMLDivElement>(null);
+  const typingIntervalRef = useRef<NodeJS.Timeout | null>(null);
 
-  const sendMessage = async () => {
-    if (!input.trim()) return;
+  // Initialize with greeting
+  useEffect(() => {
+    if (!hasStarted) {
+      setHasStarted(true);
+      typeMessage(GREETING, true);
+    }
+  }, [hasStarted]);
 
-    const userMessage = { role: 'user' as const, content: input };
+  // Auto-scroll to bottom
+  useEffect(() => {
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  }, [messages, displayedText]);
+
+  // Cleanup interval on unmount
+  useEffect(() => {
+    return () => {
+      if (typingIntervalRef.current) {
+        clearInterval(typingIntervalRef.current);
+      }
+    };
+  }, []);
+
+  const typeMessage = (text: string, isGreeting = false) => {
+    setIsTyping(true);
+    setDisplayedText('');
+    
+    let index = 0;
+    typingIntervalRef.current = setInterval(() => {
+      if (index < text.length) {
+        setDisplayedText(text.slice(0, index + 1));
+        index++;
+      } else {
+        if (typingIntervalRef.current) {
+          clearInterval(typingIntervalRef.current);
+        }
+        setIsTyping(false);
+        setMessages(prev => [...prev, { role: 'assistant', content: text }]);
+        setDisplayedText('');
+      }
+    }, 20);
+  };
+
+  const getResponse = (question: string): string => {
+    // Check for exact match first
+    if (staticResponses[question]) {
+      return staticResponses[question];
+    }
+    
+    // Check for partial match
+    const lowerQuestion = question.toLowerCase();
+    for (const [key, value] of Object.entries(staticResponses)) {
+      if (lowerQuestion.includes(key.toLowerCase().split(' ').slice(0, 2).join(' '))) {
+        return value;
+      }
+    }
+    
+    return FALLBACK_RESPONSE;
+  };
+
+  const sendMessage = (messageText?: string) => {
+    const text = messageText || input;
+    if (!text.trim() || isTyping) return;
+
+    const userMessage = { role: 'user' as const, content: text };
     setMessages(prev => [...prev, userMessage]);
     setInput('');
-    setIsLoading(true);
+    setShowSuggestions(false);
 
-    try {
-      const response = await fetch('/api/chat', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ message: input }),
-      });
+    // Get static response and type it out
+    const response = getResponse(text);
+    setTimeout(() => {
+      typeMessage(response);
+    }, 300);
+  };
 
-      const data = await response.json();
-      
-      if (response.ok) {
-        setMessages(prev => [...prev, { role: 'assistant', content: data.response }]);
-      } else {
-        setMessages(prev => [...prev, { role: 'assistant', content: 'Sorry, I encountered an error. Please try again.' }]);
-      }
-    } catch (error) {
-      setMessages(prev => [...prev, { role: 'assistant', content: 'Sorry, I encountered an error. Please try again.' }]);
-    } finally {
-      setIsLoading(false);
-    }
+  const handleSuggestionClick = (question: string) => {
+    sendMessage(question);
   };
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
@@ -52,20 +128,13 @@ export default function ChatBot() {
 
   return (
     <div className="w-full">
-      <h2 className="text-2xl font-semibold mb-6 text-foreground">Ask me about my background</h2>
-      
-      <div className="h-64 overflow-y-auto mb-4 p-4 border rounded-lg transition-all backdrop-blur-xl border-border/50 bg-card/80">
-        {messages.length === 0 && (
-          <p className="text-center transition-colors text-muted-foreground">
-            Start a conversation by asking about my experience, skills, or projects.
-          </p>
-        )}
-        
+      <div className="h-[500px] overflow-y-auto mb-4 p-6 border rounded-2xl transition-all backdrop-blur-xl border-border/50 bg-card/60">
+        {/* Messages */}
         {messages.map((message, index) => (
           <div key={index} className={`mb-4 ${message.role === 'user' ? 'text-right' : 'text-left'}`}>
-            <div className={`inline-block p-3 rounded-lg max-w-xs lg:max-w-md transition-all backdrop-blur-sm ${
+            <div className={`inline-block p-4 rounded-2xl max-w-[85%] transition-all ${
               message.role === 'user' 
-                ? 'bg-accent/80 text-accent-foreground' 
+                ? 'bg-accent text-accent-foreground' 
                 : 'bg-muted/80 text-foreground border border-border/50'
             }`}>
               {message.content}
@@ -73,29 +142,48 @@ export default function ChatBot() {
           </div>
         ))}
         
-        {isLoading && (
-          <div className="text-left">
-            <div className="inline-block p-3 rounded-lg border transition-all backdrop-blur-sm bg-muted/80 text-muted-foreground border-border/50">
-              Typing...
+        {/* Typing animation */}
+        {isTyping && displayedText && (
+          <div className="text-left mb-4">
+            <div className="inline-block p-4 rounded-2xl max-w-[85%] bg-muted/80 text-foreground border border-border/50">
+              {displayedText}
+              <span className="inline-block w-0.5 h-4 ml-0.5 bg-foreground animate-pulse" />
             </div>
           </div>
         )}
+
+        {/* Suggestion Questions - shown after greeting, before first user message */}
+        {showSuggestions && messages.length > 0 && !isTyping && (
+          <div className="mt-6 space-y-3">
+            {suggestionQuestions.map((question, index) => (
+              <button
+                key={index}
+                onClick={() => handleSuggestionClick(question)}
+                className="block w-full text-left p-4 rounded-xl border border-border/50 bg-background/50 text-muted-foreground hover:bg-hover hover:border-border-hover hover:text-foreground transition-all duration-200"
+              >
+                {question}
+              </button>
+            ))}
+          </div>
+        )}
+        
+        <div ref={messagesEndRef} />
       </div>
       
-      <div className="flex gap-2">
-        <textarea
+      <div className="flex gap-3">
+        <input
+          type="text"
           value={input}
           onChange={(e) => setInput(e.target.value)}
           onKeyDown={handleKeyDown}
-          placeholder="Ask me anything about my professional background..."
-          className="flex-1 p-3 border rounded-lg resize-none transition-all backdrop-blur-sm focus:outline-none bg-input/80 text-foreground border-input-border/50 placeholder-muted-foreground focus:border-input-focus"
-          rows={2}
-          disabled={isLoading}
+          placeholder="Ask me anything..."
+          className="flex-1 p-4 border rounded-xl transition-all backdrop-blur-sm focus:outline-none bg-input/80 text-foreground border-input-border/50 placeholder-muted-foreground focus:border-input-focus"
+          disabled={isTyping}
         />
         <button
-          onClick={sendMessage}
-          disabled={isLoading || !input.trim()}
-          className="px-6 py-3 rounded-lg transition-all backdrop-blur-sm disabled:opacity-50 disabled:cursor-not-allowed bg-accent/80 text-accent-foreground hover:bg-accent/90"
+          onClick={() => sendMessage()}
+          disabled={isTyping || !input.trim()}
+          className="px-6 py-4 rounded-xl transition-all backdrop-blur-sm disabled:opacity-50 disabled:cursor-not-allowed bg-accent text-accent-foreground hover:bg-accent-hover"
         >
           Send
         </button>
