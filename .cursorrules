@@ -1,5 +1,25 @@
 # CSS Theme Variables Rule
 
+## Use HSL as Default for Theme Colors
+
+Define theme colors in `globals.css` using **HSL** (or **HSLA** for transparency) so you can tweak hue, saturation, and lightness easily.
+
+### ✅ GOOD - Use HSL in globals.css:
+```css
+--background: hsl(0, 0%, 4%);
+--foreground: hsl(0, 0%, 94%);
+--active: hsla(0, 0%, 100%, 0.06);
+--accent: hsl(220, 4%, 11%);
+```
+
+### ❌ BAD - Avoid hex/rgba for theme variables:
+```css
+--background: #0B0B0B;
+--foreground: rgba(240, 240, 240, 1);
+```
+
+---
+
 ## Use Theme Inline Variables Instead of CSS Variables
 
 When using Tailwind CSS classes with theme colors, always use theme inline variables with opacity modifiers instead of CSS variable syntax.
@@ -28,6 +48,8 @@ className="hover:bg-hover/50"
 - `border` / `border-border`
 - `accent` / `bg-accent`
 - `accent-foreground` / `text-accent-foreground`
+- `active` / `bg-active` (nav current-page state)
+- `active-foreground` / `text-active-foreground`
 - `card` / `bg-card`
 - `card-foreground` / `text-card-foreground`
 - `hover` / `bg-hover`
