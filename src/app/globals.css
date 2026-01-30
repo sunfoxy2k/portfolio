@@ -1,112 +1,126 @@
 @import "tailwindcss";
 
-/* 
- * Semantic Color System
- * Based on Hyperstudio's dark tech aesthetic
+/*
+ * Semantic Color System — "Technical Brutalism"
+ * Inspired by Chroma (trychroma.com): high-contrast developer tool aesthetics
+ * with clean-room / terminal feel. Light = "The Laboratory", Dark = "The Terminal".
  */
 
+/* ========== DARK THEME: "The Terminal" ========== */
+/* All theme colors use HSL for easy tweaking (hue, saturation, lightness). */
 :root {
-  /* ========== BASE SURFACES ========== */
-  --background: #050505;
-  --background-secondary: #0a0a0a;
-  --foreground: #fafafa;
+  /* Nav / active (current page) state — update here to change active link look */
+  --active: hsla(0, 0%, 100%, 0.06);
+  --active-foreground: hsl(0, 0%, 94%);
 
-  /* ========== CARD / ELEVATED SURFACES ========== */
-  --card: #0f0f0f;
-  --card-foreground: #fafafa;
-  --card-hover: #141414;
+  /* Base surfaces — almost-black depth, charcoal panels */
+  --background: hsl(0, 0%, 4%);
+  --background-secondary: hsl(0, 0%, 9%);
+  --foreground: hsl(0, 0%, 94%);
 
-  /* ========== MUTED / SECONDARY CONTENT ========== */
-  --muted: #1a1a1a;
-  --muted-foreground: #a1a1a1;
+  /* Card / elevated surfaces (search bars, sidebars) */
+  --card: hsl(0, 0%, 9%);
+  --card-foreground: hsl(0, 0%, 94%);
+  --card-hover: hsl(0, 0%, 16%);
 
-  /* ========== BORDERS ========== */
-  --border: #1f1f1f;
-  --border-hover: #2a2a2a;
+  /* Muted / secondary content */
+  --muted: hsl(0, 0%, 9%);
+  --muted-foreground: hsl(0, 0%, 63%);
 
-  /* ========== PRIMARY ACCENT ========== */
-  --accent: #fafafa;
-  --accent-foreground: #050505;
-  --accent-hover: #e5e5e5;
+  /* Borders — sharp, high-contrast (terminal feel) */
+  --border: hsl(0, 0%, 25%);
+  --border-hover: hsl(0, 0%, 32%);
 
-  /* ========== INTERACTIVE / LINKS ========== */
-  --link: #a1a1a1;
-  --link-hover: #fafafa;
+  /* Primary action anchor: solid white in dark mode */
+  --accent: hsl(0, 0%, 100%);
+  --accent-foreground: hsl(0, 0%, 4%);
+  --accent-hover: hsl(0, 0%, 90%);
 
-  /* ========== INPUTS ========== */
-  --input: #0a0a0a;
-  --input-border: #1f1f1f;
-  --input-focus: #3f3f3f;
-  --input-placeholder: #525252;
+  /* Interactive / links */
+  --link: hsl(0, 0%, 63%);
+  --link-hover: hsl(0, 0%, 94%);
 
-  /* ========== HOVER STATES ========== */
-  --hover: rgba(255, 255, 255, 0.05);
-  --hover-strong: rgba(255, 255, 255, 0.1);
+  /* Inputs */
+  --input: hsl(0, 0%, 9%);
+  --input-border: hsl(0, 0%, 16%);
+  --input-focus: hsl(0, 0%, 25%);
+  --input-placeholder: hsl(0, 0%, 63%);
 
-  /* ========== FEEDBACK COLORS ========== */
-  --success: #22c55e;
-  --success-foreground: #050505;
-  --warning: #eab308;
-  --warning-foreground: #050505;
-  --error: #ef4444;
-  --error-foreground: #fafafa;
+  /* Hover states */
+  --hover: hsla(0, 0%, 100%, 0.06);
+  --hover-strong: hsla(0, 0%, 100%, 0.12);
 
-  /* ========== RING / FOCUS ========== */
-  --ring: #525252;
+  /* Feedback colors */
+  --success: hsl(142, 71%, 45%);
+  --success-foreground: hsl(0, 0%, 4%);
+  --warning: hsl(48, 93%, 47%);
+  --warning-foreground: hsl(0, 0%, 4%);
+  --error: hsl(0, 84%, 60%);
+  --error-foreground: hsl(0, 0%, 94%);
+
+  /* Ring / focus */
+  --ring: hsl(0, 0%, 63%);
   --ring-offset: var(--background);
 }
 
-/* ========== LIGHT THEME ========== */
+/* ========== LIGHT THEME: "The Canvas" ========== */
+/* Soft grey-beige, professional paper feel. No harsh white. */
 .light,
 :root:not(.dark) {
-  /* Base surfaces */
-  --background: #fafafa;
-  --background-secondary: #f5f5f5;
-  --foreground: #0a0a0a;
+  /* Primary Background — The Canvas */
+  --background: hsl(60, 14%, 95%);
+  --background-secondary: hsl(60, 14%, 93%);
 
-  /* Card / elevated surfaces */
-  --card: #ffffff;
-  --card-foreground: #0a0a0a;
-  --card-hover: #f5f5f5;
+  /* On-Surface — Main text (deep charcoal), sub-text (faded ink) */
+  --foreground: hsl(220, 4%, 11%);
+  --muted-foreground: hsl(210, 2%, 39%);
+
+  /* Surface Color — The Containers (recessed / inset) */
+  --card: hsl(60, 14%, 93%);
+  --card-foreground: hsl(220, 4%, 11%);
+  --card-hover: hsl(60, 10%, 90%);
 
   /* Muted / secondary content */
-  --muted: #f0f0f0;
-  --muted-foreground: #525252;
+  --muted: hsl(60, 14%, 93%);
 
-  /* Borders */
-  --border: #e5e5e5;
-  --border-hover: #d4d4d4;
+  /* Surface Border — The Line (crisp, no shadows) */
+  --border: hsl(40, 5%, 86%);
+  --border-hover: hsl(220, 4%, 11%);
 
-  /* Primary accent */
-  --accent: #0a0a0a;
-  --accent-foreground: #fafafa;
-  --accent-hover: #262626;
+  /* Primary action: dark background in light mode */
+  --accent: hsl(220, 4%, 11%);
+  --accent-foreground: hsl(60, 14%, 95%);
+  --accent-hover: hsl(220, 4%, 17%);
 
   /* Interactive / links */
-  --link: #525252;
-  --link-hover: #0a0a0a;
+  --link: hsl(210, 2%, 39%);
+  --link-hover: hsl(220, 4%, 11%);
 
-  /* Inputs */
-  --input: #ffffff;
-  --input-border: #e5e5e5;
-  --input-focus: #a1a1a1;
-  --input-placeholder: #a1a1a1;
+  /* Inputs (search / containers) */
+  --input: hsl(60, 14%, 93%);
+  --input-border: hsl(40, 5%, 86%);
+  --input-focus: hsl(210, 2%, 39%);
+  --input-placeholder: hsl(210, 2%, 39%);
 
   /* Hover states */
-  --hover: rgba(0, 0, 0, 0.05);
-  --hover-strong: rgba(0, 0, 0, 0.1);
+  --hover: hsla(220, 4%, 11%, 0.06);
+  --hover-strong: hsla(220, 4%, 11%, 0.1);
 
-  /* Feedback colors (same, work on both) */
-  --success: #16a34a;
-  --success-foreground: #fafafa;
-  --warning: #ca8a04;
-  --warning-foreground: #0a0a0a;
-  --error: #dc2626;
-  --error-foreground: #fafafa;
+  /* Feedback colors */
+  --success: hsl(148, 76%, 36%);
+  --success-foreground: hsl(60, 14%, 95%);
+  --warning: hsl(43, 96%, 40%);
+  --warning-foreground: hsl(220, 4%, 11%);
+  --error: hsl(0, 73%, 51%);
+  --error-foreground: hsl(60, 14%, 95%);
 
   /* Ring / focus */
-  --ring: #a1a1a1;
+  --ring: hsl(210, 2%, 39%);
   --ring-offset: var(--background);
+
+  /* Nav / active (current page) state */
+  --active: hsla(220, 4%, 11%, 0.06);
+  --active-foreground: hsl(220, 4%, 11%);
 }
 
 /* stylelint-disable-next-line at-rule-no-unknown */
@@ -148,6 +162,10 @@
   --color-hover: var(--hover);
   --color-hover-strong: var(--hover-strong);
 
+  /* ========== ACTIVE (NAV CURRENT PAGE) ========== */
+  --color-active: var(--active);
+  --color-active-foreground: var(--active-foreground);
+
   /* ========== FEEDBACK COLORS ========== */
   --color-success: var(--success);
   --color-success-foreground: var(--success-foreground);
@@ -161,9 +179,10 @@
   --color-ring-offset: var(--ring-offset);
 
   /* ========== FONTS ========== */
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-  --font-display: var(--font-space-grotesk);
+  /* Technical Brutalism: clean Sans-Serif (Inter) for UI, Monospace (JetBrains Mono) for stats */
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-jetbrains-mono), ui-monospace, monospace;
+  --font-display: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
   
   /* ========== Z-INDEX LAYER SYSTEM ========== */
   /* Base layers */
@@ -193,7 +212,7 @@ html {
 body {
   background-color: var(--background);
   color: var(--foreground);
-  font-family: var(--font-geist-sans), system-ui, sans-serif;
+  font-family: var(--font-sans);
   transition: background-color 0.2s, color 0.2s;
   min-height: 100vh;
   position: relative;
@@ -242,7 +261,7 @@ a:hover {
   background: var(--border-hover);
 }
 
-/* Glassmorphism background effect - applied to all pages */
+/* Subtle radial depth (no soft gradients — high-contrast only) */
 body::before {
   content: '';
   position: fixed;
@@ -250,22 +269,37 @@ body::before {
   left: 0;
   width: 100%;
   height: 100%;
-  background: 
-    radial-gradient(circle at 20% 50%, rgba(120, 119, 198, 0.15) 0%, transparent 50%),
-    radial-gradient(circle at 80% 80%, rgba(255, 119, 198, 0.15) 0%, transparent 50%),
-    radial-gradient(circle at 40% 20%, rgba(120, 219, 255, 0.15) 0%, transparent 50%);
+  background: radial-gradient(ellipse 80% 50% at 50% 0%, hsla(0, 0%, 100%, 0.03) 0%, transparent 50%);
   pointer-events: none;
   z-index: 0;
 }
 
-/* Light theme glassmorphism background */
 .light body::before,
 :root:not(.dark) body::before,
 html:not(.dark) body::before {
-  background: 
-    radial-gradient(circle at 20% 50%, rgba(120, 119, 198, 0.1) 0%, transparent 50%),
-    radial-gradient(circle at 80% 80%, rgba(255, 119, 198, 0.1) 0%, transparent 50%),
-    radial-gradient(circle at 40% 20%, rgba(120, 219, 255, 0.1) 0%, transparent 50%);
+  background: radial-gradient(ellipse 80% 50% at 50% 0%, hsla(0, 0%, 0%, 0.02) 0%, transparent 50%);
+}
+
+/* Scientific / classical layer: fine grid (5–10% opacity) for intellectual depth */
+body::after {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='40'%3E%3Cpath d='M0 20h40M20 0v40' stroke='%23fff' stroke-width='0.35' fill='none'/%3E%3C/svg%3E");
+  background-size: 40px 40px;
+  opacity: 0.06;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.light body::after,
+:root:not(.dark) body::after,
+html:not(.dark) body::after {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='40'%3E%3Cpath d='M0 20h40M20 0v40' stroke='%23000' stroke-width='0.35' fill='none'/%3E%3C/svg%3E");
+  opacity: 0.05;
 }
 
 /* Fade mask effect for header */
@@ -273,8 +307,8 @@ html:not(.dark) body::before {
   background: linear-gradient(
     180deg,
     var(--background) 0%,
-    rgba(0, 0, 0, 0.8) 50%,
-    rgba(0, 0, 0, 0) 100%
+    hsl(0, 0%, 4%) 50%,
+    transparent 100%
   );
 }
 
@@ -283,16 +317,12 @@ html:not(.dark) body::before {
   background: linear-gradient(
     180deg,
     var(--background) 0%,
-    rgba(255, 255, 255, 0.8) 50%,
-    rgba(255, 255, 255, 0) 100%
+    hsl(60, 14%, 95%) 50%,
+    transparent 100%
   );
 }
 
-/* Apply glassmorphism to all main content areas */
-main {
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-}
+/* No soft blur on main — sharp, data-heavy terminal feel */
 
 /* Semantic z-index utility classes */
 .z-base {

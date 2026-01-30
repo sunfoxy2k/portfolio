@@ -18,21 +18,21 @@ export default function TechStackIcons() {
   const isDark = resolvedTheme !== 'light';
 
   return (
-    <div className="flex flex-wrap gap-4">
+    <div className="flex flex-wrap gap-2">
       {techStack.map((tech) => {
         const Icon = tech.icon;
         const color = isDark ? tech.darkColor : tech.lightColor;
         return (
           <div
             key={tech.name}
-            className="group flex items-center gap-2 px-3 py-2 rounded-lg border border-border/50 bg-muted/30 hover:bg-muted/50 transition-all cursor-default"
+            className="group flex items-center gap-2 px-2.5 py-1.5 rounded border border-border bg-muted hover:bg-card-hover transition-all cursor-default"
             title={tech.name}
           >
             <Icon
-              className="w-5 h-5 transition-transform group-hover:scale-110"
+              className="w-4 h-4 transition-transform group-hover:scale-105"
               style={{ color }}
             />
-            <span className="text-sm text-muted-foreground group-hover:text-foreground transition-colors">
+            <span className="text-xs font-mono text-muted-foreground group-hover:text-foreground transition-colors">
               {tech.name}
             </span>
           </div>
